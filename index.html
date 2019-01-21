@@ -1,9 +1,154 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<title>Test</title>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Fury of Dracula Game Viewer</title>
+
+	<link rel="stylesheet" href="style.css">
+	<!-- Bootstrap -->
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
+	<!-- Icons -->
+	<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css" integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous">
 </head>
+
 <body>
-	<h1>Hello World</h1>
+	<!-- Navbar -->
+	<nav class="navbar navbar-expand-sm bg-light navbar-light">
+		<a class="navbar-brand text-muted" href="#">Fury of Dracula Map Viewer</a>
+		<ul class="navbar-nav ml-auto">
+			<li class="nav-item">
+				<a class="nav-link" href="#">Code</a>
+			</li>
+			<li class="nav-item">
+				<a class="nav-link" href="mailto:k.luxa@unsw.edu.au">Feedback</a>
+			</li>
+			<li class="nav-item">
+				<a class="nav-link" href="#">Report a Bug</a>
+			</li>
+		</ul>
+	</nav>
+
+	<div class="container-fluid">
+		<div class="row">
+			<!-- Canvas -->
+			<div class="col-lg-8 px-0 pb-0">
+				<div id="canvas"></div>
+			</div>
+
+			<div class="col-lg-4">
+				<!-- Start Panel -->
+				<div id="start-panel" class="row py-4 h-100">
+					<div class="m-auto text-center">
+						<p>Click the Load Moves button to get started.</p>
+						<button type="button" class="btn btn-primary mx-auto" data-toggle="modal" data-target="#input-moves-modal">
+							Load Moves
+						</button>
+					</div>
+				</div>
+
+				<!-- Navigation Panel -->
+				<div id="navigation-panel" class="row mx-3 py-4 h-100" style="display: none">
+					<div class="my-auto text-center">
+						<h3 id="start-of-end-of">Start of:</h3>
+						<h4 id="round-and-turn-no">Round 0, Turn 0</h4>
+						<hr>
+						<p id="narration">Narration</p>
+						<hr>
+						<div class="row mb-3">
+							<div class="col">
+								<button type="button" id="go-to-start-button" class="btn btn-outline-info">
+									Go to Start
+								</button>
+							</div>
+							<div class="col">
+								<button type="button" id="prev-turn-button" class="btn btn-info">
+									Prev Move
+								</button>
+							</div>
+							<div class="col">
+								<button type="button" id="next-turn-button" class="btn btn-info">
+									Next Move
+								</button>
+							</div>
+							<div class="col">
+								<button type="button" id="go-to-end-button" class="btn btn-outline-info">
+									Go to End
+								</button>
+							</div>
+						</div>
+						<div class="input-group mb-3">
+							<div class="input-group-prepend">
+								<label class="input-group-text" for="jump-to-round-input">
+									Jump to Round:
+								</label>
+							</div>
+							<input type="number" id="jump-to-round-input" class="form-control" min="0">
+							<div class="input-group-append">
+								<button id="jump-to-round-button" class="btn btn-outline-secondary" type="button">Go!</button>
+							</div>
+						</div>
+						<hr>
+						<button type="button" class="btn btn-primary mx-auto" data-toggle="modal" data-target="#input-moves-modal">
+							Load New Moves
+						</button>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	
+	<!-- Modal -->
+	<div id="input-moves-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="input-moves-modal" aria-hidden="true">
+		<div class="modal-dialog modal-lg" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title">Load Moves</h5>
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+				</div>
+				<div id="input-moves-modal-body" class="modal-body">
+					<p>Enter the fully-revealed move string for your game.</p>
+					<input type="text" id="moves-input" class="form-control" placeholder="GGE.... SGE.... HGE.... MGE.... DCD.V..">
+				</div>
+				<div class="modal-footer">
+					<button type="button" id="generate-example-button" class="btn btn-secondary mr-auto">Generate Example</button>
+					<button type="button" id="submit-moves-button" class="btn btn-primary">Go!</button>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<!-- Javascript -->
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"></script>
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
+
+	<script src="libraries/p5.js"></script>
+
+	<script src="LOCATIONS.js"></script>
+	<script src="CONNECTIONS.js"></script>
+
+	<script src="Animations.js"></script>
+	<script src="Color.js"></script>
+	<script src="Constants.js"></script>
+	<script src="GameHistory.js"></script>
+	<script src="GameMap.js"></script>
+	<script src="GameState.js"></script>
+	<script src="Graph.js"></script>
+	<script src="GraphicalDisplay.js"></script>
+	<script src="GraphicalHealthPanel.js"></script>
+	<script src="GraphicalMap.js"></script>
+	<script src="GraphicalScorePanel.js"></script>
+	<script src="GraphicalPlayer.js"></script>
+	<script src="TurnData.js"></script>
+	<script src="utilsDracula.js"></script>
+	<script src="utilsGeneral.js"></script>
+	<script src="Vector.js"></script>
+	<script src="View.js"></script>
+	
+	<script src="main.js"></script>
+	<script src="sketch.js"></script>
 </body>
 </html>
