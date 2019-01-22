@@ -9,6 +9,7 @@ function setup() {
 	canvas.canvas.style.width = "100%";
 	canvas.canvas.style.height = "100%";
 	BACKGROUND = loadImage("assets/europe.jpg");
+	// noLoop();
 }
 
 function draw() {

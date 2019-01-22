@@ -31,7 +31,7 @@ class MoveAnimation {
 	update() {
 		if (this.progress < 1.0) {
 			this.progress += 1.0 / (60 * this.duration);
-			if (this.progress > 1.0) {
+			if (this.progress >= 1.0) {
 				this.progress = 1.0;
 			}
 			this.entity.setPosition(this.fn(this.progress));
@@ -81,7 +81,7 @@ class SizeAnimation {
 	update() {
 		if (this.progress < 1.0) {
 			this.progress += 1.0 / (60 * this.duration);
-			if (this.progress > 1.0) {
+			if (this.progress >= 1.0) {
 				this.progress = 1.0;
 			}
 			this.entity.setSize(this.fn(this.progress));

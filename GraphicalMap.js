@@ -1,9 +1,9 @@
 
 const LineType = {
 	STRAIGHT_LINE:            0,
-	QUADRATIC_BEZIER_CURVE:   1,
-	CUBIC_BEZIER_CURVE:       2,
-	PIECEWISE_STRAIGHT_LINES: 3,
+	PIECEWISE_STRAIGHT_LINES: 1,
+	QUADRATIC_BEZIER_CURVE:   2,
+	CUBIC_BEZIER_CURVE:       3,
 };
 
 /**
@@ -213,12 +213,19 @@ class GraphicalMap {
 		this.populate();
 	}
 
+	/**
+	 * Adds  locations,  connections,  and boundaries to the map so that
+	 * they can be displayed.
+	 */
 	populate() {
 		this.addLocations();
 		this.addConnections();
 		this.addBoundaries();
 	}
 
+	/**
+	 * Adds all locations to the map.
+	 */
 	addLocations() {
 		LOCATION_COORDS_JSON.then(json => {
 			const locationCoords = json.locationCoords;
@@ -236,6 +243,9 @@ class GraphicalMap {
 		this.locations.set(graphicalLocation.id, graphicalLocation);
 	}
 
+	/**
+	 * Adds all connections to the map.
+	 */
 	addConnections() {
 		Promise.all([LOCATION_COORDS_JSON, CONNECTION_COORDS_JSON])
 			.then(jsons => {
@@ -258,9 +268,12 @@ class GraphicalMap {
 		this.connections.push(graphicalConnection);
 	}
 
+	/**
+	 * Adds all sea boundaries to the map.
+	 */
 	addBoundaries() {
 		BOUNDARY_COORDS_JSON.then(json => {
-			const boundaries = json.boundaries;
+			const boundaries = json.boundaryCoords;
 			for (let boundary of boundaries) {
 				this.boundaries.push(new GraphicalBoundary(boundary));
 			}

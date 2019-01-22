@@ -1,8 +1,15 @@
 
-// Promises for JSONs
+//* Promises for JSONs
 const LOCATION_COORDS_JSON   = getJSON("data/locationCoords.json");
 const CONNECTION_COORDS_JSON = getJSON("data/connectionCoords.json");
 const BOUNDARY_COORDS_JSON   = getJSON("data/boundaryCoords.json");
+// */
+
+/* For local testing
+const LOCATION_COORDS_JSON   = getJSON("https://api.myjson.com/bins/19v9pw");
+const CONNECTION_COORDS_JSON = getJSON("https://api.myjson.com/bins/1e5l9w");
+const BOUNDARY_COORDS_JSON   = getJSON("https://api.myjson.com/bins/16p8s4");
+// */
 
 const DISPLAY = new GraphicalDisplay();
 const GAME_MAP = new GameMap();
