@@ -1,23 +1,25 @@
 
 const GameConstants = {
-	// Score
+    // Score
 	GAME_START_SCORE:            366,
 	SCORE_LOSS_DRACULA_TURN:       1,
 	SCORE_LOSS_HUNTER_HOSPITAL:    6,
 	SCORE_LOSS_VAMPIRE_MATURES:   13,
-
+    
 	// Hunters' Health
 	GAME_START_HUNTER_LIFE_POINTS: 9,
 	LIFE_LOSS_TRAP_ENCOUNTER:      2,
 	LIFE_LOSS_DRACULA_ENCOUNTER:   4,
 	LIFE_GAIN_REST:                3,
-	
+    
 	// Dracula's Health
 	GAME_START_BLOOD_POINTS:      40,
 	LIFE_LOSS_HUNTER_ENCOUNTER:   10,
 	LIFE_LOSS_SEA:                 2,
 	LIFE_GAIN_CASTLE_DRACULA:     10,
 };
+
+const NUM_PLAYERS = 5;
 
 const PlayerID = {
 	LORD_GODALMING: 0,

@@ -273,8 +273,8 @@ class GraphicalMap {
 	 */
 	addBoundaries() {
 		BOUNDARY_COORDS_JSON.then(json => {
-			const boundaries = json.boundaryCoords;
-			for (let boundary of boundaries) {
+			const boundaryCoords = json.boundaryCoords;
+			for (let boundary of boundaryCoords) {
 				this.boundaries.push(new GraphicalBoundary(boundary));
 			}
 		});

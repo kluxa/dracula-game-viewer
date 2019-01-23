@@ -101,3 +101,16 @@ function piecewiseStraightLinesPoint(ps, t) {
 	return straightLinePoint(ps[i], ps[i + 1],
 		                     t / s - i);
 }
+
+/**
+ * Draws  a quadrilateral using the current canvas
+ * settings.
+ */
+function drawQuad(x0, y0, x1, y1, x2, y2, x3, y3) {
+	beginShape();
+	vertex(x0, y0);
+	vertex(x1, y1);
+	vertex(x2, y2);
+	vertex(x3, y3);
+	endShape(CLOSE);
+}
