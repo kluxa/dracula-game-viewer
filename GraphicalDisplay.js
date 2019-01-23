@@ -113,4 +113,8 @@ class GraphicalDisplay {
 	updateGameScore(score) {
 		this.scorePanel.updateScore(score);
 	}
+
+	updateDracTrail(trail) {
+		this.map.setDracTrail(trail);
+	}
 }

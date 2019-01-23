@@ -125,10 +125,10 @@ function processPastPlays(pastPlays) {
 	// pastPlays string.
 	const gameHistory = new GameHistory();
 	
-	const state = new GameState();
+	const processor = new Processor();
 	for (let i = 0; i < allPlays.length; i++) {
 		try {
-			const turnData = state.processNewTurn(allPlays[i]);
+			const turnData = processor.processNewTurn(allPlays[i]);
 			turnData.produceNarration();
 			gameHistory.addTurnData(turnData);
 		} catch (error) {

@@ -20,6 +20,7 @@ const GameConstants = {
 };
 
 const NUM_PLAYERS = 5;
+const TRAIL_SIZE  = 6;
 
 const PlayerID = {
 	LORD_GODALMING: 0,

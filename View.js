@@ -118,9 +118,10 @@ class View {
 		$('#round-and-turn-no').text(`Round ${this.turnToRound(turn)}, ` +
 		                             `Turn ${this.turnToPlayer(turn)}`);
 		const turnData = this.history.getTurn(turn);
-		DISPLAY.updatePlayerLocations(turnData.getStartState().locations);
-		DISPLAY.updatePlayerHealths(turnData.getStartState().healths);
-		DISPLAY.updateGameScore(turnData.getStartState().score);
+		DISPLAY.updateDracTrail(turnData.getStartState().getDracTrailLocations());
+		DISPLAY.updatePlayerLocations(turnData.getStartState().getLocations());
+		DISPLAY.updatePlayerHealths(turnData.getStartState().getHealths());
+		DISPLAY.updateGameScore(turnData.getStartState().getScore());
 		$('#narration').text(turnData.getNarration());
 	}
 	
@@ -134,9 +135,10 @@ class View {
 		$('#round-and-turn-no').text(`Round ${this.turnToRound(turn)}, ` +
 		                             `Turn ${this.turnToPlayer(turn)}`);
 		const turnData = this.history.getTurn(turn);
-		DISPLAY.updatePlayerLocations(turnData.getEndState().locations);
-		DISPLAY.updatePlayerHealths(turnData.getEndState().healths);
-		DISPLAY.updateGameScore(turnData.getEndState().score);
+		DISPLAY.updateDracTrail(turnData.getEndState().getDracTrailLocations());
+		DISPLAY.updatePlayerLocations(turnData.getEndState().getLocations());
+		DISPLAY.updatePlayerHealths(turnData.getEndState().getHealths());
+		DISPLAY.updateGameScore(turnData.getEndState().getScore());
 		$('#narration').text(turnData.getNarration());
 	}
 

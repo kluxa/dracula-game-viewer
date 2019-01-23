@@ -38,21 +38,44 @@ class GraphicalLocation {
 	 */
 	draw() {
 		push();
+		
+		stroke(0);
+		strokeWeight(1.5);
+		this.setFillColor();
+
+		this.drawCity();
+		this.writeAbbrev();
+		
+		pop();
+	}
+
+	setFillColor() {
 		switch (this.type) {
 			case LocationType.INLAND_CITY: fill(165,  42,  42); break;
 			case LocationType.PORT_CITY:   fill(135, 206, 250); break;
 			case LocationType.SEA:         fill(  0,   0, 128); break;
-			default: console.warn("GraphicalLocation.draw: " +
-			                      "Invalid location type!");
 		}
-		stroke(0);
-		strokeWeight(1.5);
-		ellipse(this.x, this.y, 22);
+	}
 
+	drawCity() {
+		ellipse(this.x, this.y, 22);
+	}
+
+	writeAbbrev() {
 		fill(0);
 		noStroke();
 		textSize(14);
 		text(this.abbrev, this.labelX, this.labelY);
+	}
+
+	highlight() {
+		push();
+
+		stroke(255, 0, 0);
+		strokeWeight(2.5);
+		this.setFillColor();
+		this.drawCity();
+
 		pop();
 	}
 }
@@ -88,24 +111,40 @@ class GraphicalConnection {
 	draw() {
 		push();
 
-		noFill();
-		switch (this.type) {
-			case TransportMode.ROAD:
-				stroke(  0,   0,   0);
-				strokeWeight(1.5);
-				break;
-			case TransportMode.RAIL:
-				stroke(  0,   0,   0);
-				strokeWeight(3.0);
-				dash([4, 8]);
-				break;
-			case TransportMode.BOAT:
-				stroke( 65, 105, 225);
-				strokeWeight(1.5);
-				dash([25, 8]);
-				break;
-		}
+		this.setStrokeColor();
+		this.setStrokeWeight();
+		this.setStrokeDash();
+		this.drawLine();
 
+		pop();
+	}
+
+	setStrokeColor() {
+		switch (this.type) {
+			case TransportMode.ROAD: stroke(  0,   0,   0); break;
+			case TransportMode.RAIL: stroke(  0,   0,   0); break;
+			case TransportMode.BOAT: stroke( 65, 105, 225); break;
+		}
+	}
+
+	setStrokeWeight() {
+		switch (this.type) {
+			case TransportMode.ROAD: strokeWeight(1.5); break;
+			case TransportMode.RAIL: strokeWeight(3.0); break;
+			case TransportMode.BOAT: strokeWeight(1.5); break;
+		}
+	}
+
+	setStrokeDash() {
+		switch (this.type) {
+			case TransportMode.ROAD:                break;
+			case TransportMode.RAIL: dash([ 4, 8]); break;
+			case TransportMode.BOAT: dash([25, 8]); break;
+		}
+	}
+
+	drawLine() {
+		noFill();
 		switch (this.style) {
 			case LineType.STRAIGHT_LINE:
 				this.drawStraightConnection();
@@ -120,6 +159,19 @@ class GraphicalConnection {
 				this.drawCubicBezierConnection();
 				break;
 		}
+	}
+
+	highlight() {
+		push();
+
+		stroke(255, 0, 0);
+		switch (this.type) {
+			case TransportMode.ROAD: strokeWeight(2.4); break;
+			case TransportMode.RAIL: strokeWeight(4.0); break;
+			case TransportMode.BOAT: strokeWeight(2.4); break;
+		}
+		this.setStrokeDash();
+		this.drawLine();
 
 		pop();
 	}
@@ -211,7 +263,12 @@ class GraphicalMap {
 		this.locations = new Map();
 		this.connections = [];
 		this.populate();
+
+		this.dracTrail = [];
 	}
+
+	////////////////////////////////////////////////////////////////////
+	// Populating                                                     //
 
 	/**
 	 * Adds  locations,  connections,  and boundaries to the map so that
@@ -280,6 +337,16 @@ class GraphicalMap {
 		});
 	}
 
+	////////////////////////////////////////////////////////////////////
+	// Setters                                                        //
+
+	setDracTrail(dracTrail) {
+		this.dracTrail = dracTrail;
+	}
+
+	////////////////////////////////////////////////////////////////////
+	// Drawing                                                        //
+
 	/**
 	 * Draws the map onto the canvas.
 	 */
@@ -292,6 +359,24 @@ class GraphicalMap {
 		}
 		for (let location of this.locations.values()) {
 			location.draw();
+		}
+		this.drawTrail();
+	}
+
+	drawTrail() {
+		for (let i = 0; i < this.dracTrail.length - 1; i++) {
+			for (let conn of this.connections) {
+				if ((conn.locations[0] === this.dracTrail[i] &&
+						conn.locations[1] === this.dracTrail[i + 1]) ||
+						(conn.locations[0] === this.dracTrail[i + 1] &&
+						conn.locations[1] === this.dracTrail[i])) {
+					conn.highlight();
+					break;
+				}
+			}
+		}
+		for (let i = 0; i < this.dracTrail.length; i++) {
+			this.locations.get(this.dracTrail[i]).highlight();
 		}
 	}
 

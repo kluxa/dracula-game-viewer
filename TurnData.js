@@ -3,10 +3,10 @@ class TurnData {
 	constructor() {
 		// These will be set by the
 		// play string processor.
+		this.playString = undefined;
 		this.startState = undefined;
 		this.endState = undefined;
 		this.player = undefined;
-		this.playString = undefined;
 		this.move = undefined;
 		this.location = undefined;
 		this.actions = [];
@@ -101,4 +101,6 @@ class TurnData {
 	getNarration() {
 		return this.narration;
 	}
+
+	
 }
