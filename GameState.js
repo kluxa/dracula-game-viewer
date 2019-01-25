@@ -59,9 +59,7 @@ class GameState {
 	}
 
 	getDracTrailLocations() {
-		console.log(this);
 		const history = this.locationHistory[PlayerID.DRACULA];
-		console.log(history);
 		return history.slice(Math.max(0, history.length - TRAIL_SIZE));
 	}
 }

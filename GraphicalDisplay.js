@@ -10,7 +10,7 @@ class GraphicalDisplay {
 			new GraphicalPlayer(playerIdToColor(3), new Vector( 5,  5)),
 			new GraphicalPlayer(playerIdToColor(4), new Vector( 0,  0)),
 		];
-		this.healthPanel = new GraphicalHealthPanel();
+		this.statsPanel = new GraphicalStatsPanel();
 		this.scorePanel = new GraphicalScorePanel();
 	}
 
@@ -29,7 +29,7 @@ class GraphicalDisplay {
 	draw() {
 		this.map.draw();
 		this.players.forEach(p => p.draw());
-		this.healthPanel.draw();
+		this.statsPanel.draw();
 		this.scorePanel.draw();
 	}
 
@@ -96,6 +96,8 @@ class GraphicalDisplay {
 				this.players[i].setPosition(coords);
 			}
 		}
+
+		this.statsPanel.updateLocations(locationIds);
 	}
 
 	/**
@@ -103,7 +105,7 @@ class GraphicalDisplay {
 	 * @param {number[5]} healths - Health values of the players.
 	 */
 	updatePlayerHealths(healths) {
-		this.healthPanel.updateHealths(healths);
+		this.statsPanel.updateHealths(healths);
 	}
 
 	/**

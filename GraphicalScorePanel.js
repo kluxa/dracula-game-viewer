@@ -12,6 +12,8 @@ const SCORE_PANEL_H =         70;
 const SCORE_PANEL_TITLE_Y =   45;
 const SCORE_PANEL_SCORE_Y =   75;
 
+////////////////////////////////////////////////////////////////////////
+
 class GraphicalScorePanel {
 	constructor() {
 		this.score = -1;

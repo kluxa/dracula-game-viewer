@@ -1,5 +1,7 @@
-
 // Utility functions for the Fury of Dracula.
+
+////////////////////////////////////////////////////////////////////////
+// Players                                                            //
 
 /**
  * Returns  the  name of the player with the given
@@ -53,6 +55,78 @@ function playerIdToColor(playerId) {
 }
 
 /**
+ * Returns  "he" or "she", depending on the gender
+ * of the given player.
+ * @param {number} playerId - A player ID. 
+ */
+function heOrShe(playerId) {
+	return (playerId === PlayerID.MINA_HARKER ?
+		    "she" : "he");
+}
+
+////////////////////////////////////////////////////////////////////////
+// Locations                                                          //
+
+/**
+ * Returns  the  ID of the location with the given
+ * two-letter  abbreviation, or LocationID.NOWHERE
+ * if no such location exists.
+ * @param {string} abbrev - A  two-letter location
+ *                          abbreviation.
+ * @returns {number} A location ID.
+ */
+function locationAbbrevToId(abbrev) {
+	return moveAbbrevToId(abbrev);
+}
+
+/**
+ * Returns the name of the location with the given
+ * ID.
+ * @param {number} locationId - A location ID. 
+ */
+function locationIdToName(locationId) {
+	return moveIdToName(locationId);
+}
+
+/**
+ * Returns  the  abbreviation of the location with
+ * the given ID.
+ * @param {number} locationId - A location ID.
+ */
+function locationIdToAbbrev(locationId) {
+	if (isRealLocation(locationId)) {
+		return LOCATIONS[locationId].abbrev;
+	} else {
+		return "??";
+	}
+}
+
+/**
+ * Returns the type of the location with the given
+ * ID.
+ * @param {number} abbrev - A location ID.
+ */
+function locationIdToType(locationId) {
+	if (isRealLocation(locationId)) {
+		return LOCATIONS[locationId].type;
+	} else {
+		return -1;
+	}
+}
+
+/**
+ * Determines whether the given location is a sea,
+ * returning true or false as appropriate.
+ * @param {number} locationId - A location ID.
+ */
+function isSea(locationId) {
+	return LOCATIONS[locationId].type === LocationType.SEA;
+}
+
+////////////////////////////////////////////////////////////////////////
+// Moves                                                              //
+
+/**
  * Returns  the ID of the move with the given two-
  * letter  abbreviation,  or LocationID.NOWHERE if
  * no such move exists.
@@ -80,17 +154,6 @@ function moveAbbrevToId(abbrev) {
 	return LocationID.NOWHERE;
 }
 
-/**
- * Returns  the  ID of the location with the given
- * two-letter  abbreviation, or LocationID.NOWHERE
- * if no such location exists.
- * @param {string} abbrev - A  two-letter location
- *                          abbreviation.
- * @returns {number} A location ID.
- */
-function locationAbbrevToId(abbrev) {
-	return moveAbbrevToId(abbrev);
-}
 
 /**
  * Returns the name of the move with the given ID,
@@ -118,15 +181,6 @@ function moveIdToName(moveId) {
 }
 
 /**
- * Returns the name of the location with the given
- * ID.
- * @param {number} locationId - A location ID. 
- */
-function locationIdToName(locationId) {
-	return moveIdToName(locationId);
-}
-
-/**
  * Determines  whether  the given move corresponds
  * to  a real location, returning true or false as
  * appropriate.
@@ -137,14 +191,7 @@ function isRealLocation(moveId) {
 			moveId <= LocationID.LAST_LOCATION);
 }
 
-/**
- * Determines whether the given location is a sea,
- * returning true or false as appropriate.
- * @param {number} locationId - A location ID.
- */
-function isSea(locationId) {
-	return LOCATIONS[locationId].type === LocationType.SEA;
-}
+
 
 /**
  * Determines  whether the given move is exclusive
@@ -211,16 +258,6 @@ function doubleBackToNum(moveId) {
  */
 function containsDoubleBack(array) {
 	return array.some(x => isDoubleBack(x));
-}
-
-/**
- * Returns  "he" or "she", depending on the gender
- * of the given player.
- * @param {number} playerId - A player ID. 
- */
-function heOrShe(playerId) {
-	return (playerId === PlayerID.MINA_HARKER ?
-		    "she" : "he");
 }
 
 /**
