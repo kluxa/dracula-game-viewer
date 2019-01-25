@@ -6,6 +6,15 @@ const LineType = {
 	CUBIC_BEZIER_CURVE:       3,
 };
 
+function locationTypeToColor(type) {
+	switch (type) {
+		case LocationType.INLAND_CITY: return color(255, 209, 158);
+		case LocationType.PORT_CITY:   return color(135, 206, 250);
+		case LocationType.SEA:         return color(  0,   0, 128);
+		default:                       return 180;
+	}
+}
+
 /**
  * A class representing a location on the canvas.
  */
@@ -50,11 +59,7 @@ class GraphicalLocation {
 	}
 
 	setFillColor() {
-		switch (this.type) {
-			case LocationType.INLAND_CITY: fill(165,  42,  42); break;
-			case LocationType.PORT_CITY:   fill(135, 206, 250); break;
-			case LocationType.SEA:         fill(  0,   0, 128); break;
-		}
+		fill(locationTypeToColor(this.type));
 	}
 
 	drawCity() {
@@ -264,7 +269,8 @@ class GraphicalMap {
 		this.connections = [];
 		this.populate();
 
-		this.dracTrail = [];
+		this.trailLocations = [];
+		this.trailConnections = [];
 	}
 
 	////////////////////////////////////////////////////////////////////
@@ -318,7 +324,8 @@ class GraphicalMap {
 						connectionCoords[i].controlPoints
 					));
 				}
-			});
+			}
+		);
 	}
 
 	addConnection(graphicalConnection) {
@@ -341,7 +348,43 @@ class GraphicalMap {
 	// Setters                                                        //
 
 	setDracTrail(dracTrail) {
-		this.dracTrail = dracTrail;
+		this.trailLocations = dracTrail.filter(x => isRealLocation(x))
+		        					   .map(x => this.locations.get(x));
+
+		const connections = [];
+		for (let i = 0; i < dracTrail.length - 1; i++) {
+			if (!isRealLocation(dracTrail[i]) ||
+			        !isRealLocation(dracTrail[i + 1])) {
+				continue;
+			}
+			const conn = this.getConnection(dracTrail[i],
+											dracTrail[i + 1]);
+			if (conn !== undefined) {
+				connections.push(conn);
+			}
+		}
+		this.trailConnections = connections;
+	}
+
+	////////////////////////////////////////////////////////////////////
+	// Helpers                                                        //
+
+	/**
+	 * Returns  the  first connection found that connects locations with
+	 * the given IDs, or undefined if no such connection exists.
+	 * @param {number} locationId1 - The first location's ID.
+	 * @param {number} locationId2 - The second location's ID.
+	 */
+	getConnection(locationId1, locationId2) {
+		for (let conn of this.connections) {
+			if ((conn.locations[0] === locationId1 &&
+					conn.locations[1] === locationId2) ||
+					(conn.locations[0] === locationId2 &&
+					conn.locations[1] === locationId1)) {
+				return conn;
+			}
+		}
+		return undefined;
 	}
 
 	////////////////////////////////////////////////////////////////////
@@ -351,34 +394,21 @@ class GraphicalMap {
 	 * Draws the map onto the canvas.
 	 */
 	draw() {
-		for (let boundary of this.boundaries) {
-			boundary.draw();
-		}
-		for (let connection of this.connections) {
-		 	connection.draw();
-		}
-		for (let location of this.locations.values()) {
-			location.draw();
+		this.boundaries.forEach(x => x.draw());
+		this.connections.forEach(x => x.draw());
+		for (let l of this.locations.values()) {
+			l.draw();
 		}
 		this.drawTrail();
 	}
 
 	drawTrail() {
-		for (let i = 0; i < this.dracTrail.length - 1; i++) {
-			for (let conn of this.connections) {
-				if ((conn.locations[0] === this.dracTrail[i] &&
-						conn.locations[1] === this.dracTrail[i + 1]) ||
-						(conn.locations[0] === this.dracTrail[i + 1] &&
-						conn.locations[1] === this.dracTrail[i])) {
-					conn.highlight();
-					break;
-				}
-			}
-		}
-		for (let i = 0; i < this.dracTrail.length; i++) {
-			this.locations.get(this.dracTrail[i]).highlight();
-		}
+		this.trailConnections.forEach(x => x.highlight());
+		this.trailLocations.forEach(x => x.highlight());
 	}
+
+	////////////////////////////////////////////////////////////////////
+	// Querying                                                       //
 
 	/**
 	 * Gets the coordinates of the location with the given ID.
