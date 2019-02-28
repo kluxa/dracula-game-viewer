@@ -1,6 +1,6 @@
 
 /**
- * A class to represent the state of the game
+ * A class to process the play string for a single game.
  */
 class Processor {
 	constructor() {
@@ -12,8 +12,8 @@ class Processor {
 			.fill(GameConstants.GAME_START_HUNTER_LIFE_POINTS)
 			.concat([GameConstants.GAME_START_BLOOD_POINTS]);
 		this.locations = (new Array(NUM_PLAYERS)).fill(LocationID.NOWHERE);
-		this.locationHistory = (new Array(NUM_PLAYERS)).fill(0).map(() => new Array());
-		this.moveHistory = (new Array(NUM_PLAYERS)).fill(0).map(() => new Array());
+		this.locationHistory = (new Array(NUM_PLAYERS)).fill(0).map(() => []);
+		this.moveHistory = (new Array(NUM_PLAYERS)).fill(0).map(() => []);
 		this.hunterViewOfDrac = [];
 		this.traps = [];
 		this.vampireLocation = LocationID.NOWHERE;

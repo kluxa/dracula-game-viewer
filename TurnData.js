@@ -98,9 +98,27 @@ class TurnData {
 		return this.actions;
 	}
 
+	/**
+	 * Returns  a  string  containing a description of the movement that
+	 * occurred this turn.
+	 */
 	getNarration() {
 		return this.narration;
 	}
 
-	
+	/**
+	 * Returns the starting location of the player who played this turn.
+	 */
+	getStartLocation() {
+		return this.startState.getLocation(this.player);
+	}
+
+	/**
+	 * Returns  the  destination  location of the player who played this
+	 * turn. (Note: This is not necessarily the same as the end location
+	 * as the player could have been incapacitated.)
+	 */
+	getDestinationLocation() {
+		return this.location;
+	}
 }

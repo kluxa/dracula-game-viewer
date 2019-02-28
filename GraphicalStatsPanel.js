@@ -225,8 +225,8 @@ class GraphicalStatsPanel {
 		textSize(14);
 		textAlign(CENTER, CENTER);
 		text(`${abbrev}`,
-				STATS_PANEL_LOC_C_X,
-				STATS_PANEL_LOC_C_Y(playerId));
+			 STATS_PANEL_LOC_C_X,
+			 STATS_PANEL_LOC_C_Y(playerId));
 		
 		pop();
 	}

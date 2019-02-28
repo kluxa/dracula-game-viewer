@@ -19,7 +19,7 @@ const VIEW = new View();
 // Navigation Panel                                                   //
 
 $('#go-to-start-button').click(() => {
-	VIEW.jumpToRound(0);
+	VIEW.jumpToStart();
 });
 
 $('#prev-turn-button').click(() => {
@@ -51,13 +51,17 @@ $('body').keydown(e => {
 	if (VIEW.history !== undefined &&
 			!($('#input-moves-modal').is(':visible'))) {
 		switch (e.keyCode) {
-			case 36: VIEW.jumpToRound(0); break;
+			case 36: VIEW.jumpToStart();  break;
 			case 37: VIEW.goPrevTurn();   break;
 			case 39: VIEW.goNextTurn();   break;
 			case 35: VIEW.jumpToEnd();    break;
 		}
 	}
 });
+
+$('#toggle-animations-button').click(() => {
+	VIEW.toggleAnimations();
+})
 
 ////////////////////////////////////////////////////////////////////////
 // Input Moves Modal                                                  //

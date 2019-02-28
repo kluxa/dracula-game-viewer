@@ -1,11 +1,12 @@
 
 /**
- * A class that controls presentation logic.
+ * A class that controls the presentation of game information.
  */
 class View {
 	constructor() {
 		this.history = undefined;
 		this.turn = 0;
+		this.animationsOn = true;
 	}
 
 	////////////////////////////////////////////////////////////////////
@@ -28,6 +29,17 @@ class View {
 		this.history = history;
 		this.turn = 0;
 		this.showState(0);
+	}
+
+	toggleAnimations() {
+		this.animationsOn = !this.animationsOn;
+		if (this.animationsOn) {
+			$('#animation-setting-desc').text('Animations are on.');
+			$('#toggle-animations-button').text('Turn off animations');
+		} else {
+			$('#animation-setting-desc').text('Animations are off.');
+			$('#toggle-animations-button').text('Turn on animations');
+		}
 	}
 
 	////////////////////////////////////////////////////////////////////
@@ -53,25 +65,24 @@ class View {
 	// Changing turns                                                 //
 
 	/**
-	 * Animates  the movement in the current turn, and then
-	 * causes  the game state at the start of the next turn
-	 * to be shown.
+	 * Causes  the  game  state  at the very beginning of the game to be
+	 * shown.
 	 */
-	goNextTurn() {
+	jumpToStart() {
 		DISPLAY.clearAnimations();
 		DISPLAY.resetPlayers();
-		if (this.turn < this.history.getNumTurns()) {
-			this.animateTurn(this.turn);
-		}
+
+		this.showGameStartState();
 	}
 
 	/**
-	 * Causes  the  game state at the start of the previous
-	 * turn to be shown.
+	 * Causes  the  game  state  at the start of the previous turn to be
+	 * shown.
 	 */
 	goPrevTurn() {
 		DISPLAY.clearAnimations();
 		DISPLAY.resetPlayers();
+
 		if (this.turn > 0) {
 			this.turn--;
 			this.showState(this.turn);
@@ -79,69 +90,113 @@ class View {
 	}
 
 	/**
-	 * Causes  the game state at the beginning of the given
-	 * round to be shown.
+	 * Advances  the  game state to the next turn. If animations are on,
+	 * then the current turn is animated before showing the next turn.
+	 */
+	goNextTurn() {
+		DISPLAY.clearAnimations();
+		DISPLAY.resetPlayers();
+
+		if (this.turn < this.history.getNumTurns()) {
+			if (this.turn >= NUM_PLAYERS && this.animationsOn) {
+				this.animateTurn(this.turn);
+			} else {
+				this.turn++;
+				this.showState(this.turn);
+			}
+		} else {
+			this.showGameEndState();
+		}
+	}
+
+	/**
+	 * Causes  the  game  state  at the end of the game (end of the last
+	 * turn) to be shown.
+	 */
+	jumpToEnd() {
+		DISPLAY.clearAnimations();
+		DISPLAY.resetPlayers();
+
+		this.showGameEndState();
+	}
+
+	/**
+	 * Causes  the  game state at the beginning of the given round to be
+	 * shown.
 	 * @param {number} round - A round number.
 	 */
 	jumpToRound(round) {
 		DISPLAY.clearAnimations();
 		DISPLAY.resetPlayers();
+
 		this.turn = round * 5;
 		this.showState(this.turn);
 	}
-
-	/**
-	 * Causes the game state at the end of the game (end of
-	 * the last turn) to be shown.
-	 */
-	jumpToEnd() {
-		DISPLAY.clearAnimations();
-		DISPLAY.resetPlayers();
-		this.turn = this.history.getNumTurns();
-		this.showState(this.turn);
-	}
-
+	
 	////////////////////////////////////////////////////////////////////
 	// Showing game state                                             //
 
 	/**
-	 * Shows the game state at the start of the given turn.
+	 * Causes  the game state at the very start of the game to be shown.
+	 */
+	showGameStartState() {
+		this.turn = 0;
+		this.showState(0);
+	}
+
+	/**
+	 * Causes  the  game  state at the very end of the game to be shown.
+	 */
+	showGameEndState() {
+		this.turn = this.history.getNumTurns();
+		this.showState(this.turn);
+	}
+
+	/**
+	 * Causes the game state corresponding to the given turn to be shown
+	 * @param {number} turnNo - The turn number.
 	 */
 	showState(turn) {
 		DISPLAY.resetPlayers();
-		if (turn === this.history.getNumTurns()) {
-			this.showEndState();
-			return;
-		}
 
-		$('#start-of-end-of').text("Start of:");
-		$('#round-and-turn-no').text(`Round ${this.turnToRound(turn)}, ` +
-		                             `Turn ${this.turnToPlayer(turn)}`);
-		const turnData = this.history.getTurn(turn);
-		DISPLAY.updateDracTrail(turnData.getStartState().getDracTrailLocations());
-		DISPLAY.updatePlayerLocations(turnData.getStartState().getLocations());
-		DISPLAY.updatePlayerHealths(turnData.getStartState().getHealths());
-		DISPLAY.updateGameScore(turnData.getStartState().getScore());
-		$('#narration').text(turnData.getNarration());
+		const numTurns = this.history.getNumTurns();
+		$('#go-to-start-button').prop("disabled", turn === 0);
+		$('#prev-turn-button'  ).prop("disabled", turn === 0);
+		$('#next-turn-button'  ).prop("disabled", turn === numTurns);
+		$('#go-to-end-button'  ).prop("disabled", turn === numTurns);
+
+		if (turn !== numTurns) {
+			this.showTurnStartState(turn);
+		} else {
+			this.showTurnEndState(turn - 1);
+		}
 	}
 	
 	/**
-	 * Shows  the game state at the end of the game (end of
-	 * the last turn).
+	 * Causes the game state at the start of the given turn to be shown.
+	 * @param {number} turnNo - The turn number.
 	 */
-	showEndState() {
-		$('#start-of-end-of').text("End of:");
-		let turn = this.history.getNumTurns() - 1;
-		$('#round-and-turn-no').text(`Round ${this.turnToRound(turn)}, ` +
-		                             `Turn ${this.turnToPlayer(turn)}`);
-		const turnData = this.history.getTurn(turn);
-		DISPLAY.updateDracTrail(turnData.getEndState().getDracTrailLocations());
-		DISPLAY.updatePlayerLocations(turnData.getEndState().getLocations());
-		DISPLAY.updatePlayerHealths(turnData.getEndState().getHealths());
-		DISPLAY.updateGameScore(turnData.getEndState().getScore());
+	showTurnStartState(turnNo) {
+		$('#start-of-end-of').text("Start of:");
+		$('#round-and-turn-no').text(`Round ${this.turnToRound(turnNo)}, ` +
+		                             `Turn ${this.turnToPlayer(turnNo)}`);
+		const turnData = this.history.getTurn(turnNo);
 		$('#narration').text(turnData.getNarration());
+		DISPLAY.updateState(turnData.getStartState());
 	}
 
+	/**
+	 * Causes  the  game start at the end of the given turn to be shown.
+	 * @param {number} turnNo - The turn number.
+	 */
+	showTurnEndState(turnNo) {
+		$('#start-of-end-of').text("End of:");
+		$('#round-and-turn-no').text(`Round ${this.turnToRound(turnNo)}, ` +
+		                             `Turn ${this.turnToPlayer(turnNo)}`);
+		const turnData = this.history.getTurn(turnNo);
+		$('#narration').text(turnData.getNarration());
+		DISPLAY.updateState(turnData.getEndState());
+	}
 
 	////////////////////////////////////////////////////////////////////
 	// Animate Turn                                                   //
@@ -153,34 +208,44 @@ class View {
 	animateTurn(turn) {
 		this.showState(this.turn);
 
-		// Don't animate first round.
-		if (turn < 5) {
+		const turnData = this.history.getTurn(turn);
+		const player = turnData.getPlayer();
+		const src = turnData.getStartLocation();
+		const dest = turnData.getDestinationLocation();
+
+		const callback = () => this.showState(this.turn);
+
+		// Teleportation
+		if (turnData.getMove() === LocationID.TELEPORT) {
 			this.turn++;
-			this.showState(this.turn);
+			DISPLAY.animateTeleportation(player, callback);
+			return;
+		
+		// If the player didn't move, no animation
+		} else if (src === dest) {
+			this.showState(++this.turn);
 			return;
 		}
 
-		const turnData = this.history.getTurn(turn);
-		const player = turnData.getPlayer();
-		const src = turnData.getStartState().locations[player];
-		const dest = turnData.getLocation();
+		let locations;
+		let transport;
 
-		if (turnData.move === LocationID.TELEPORT) {
-			DISPLAY.animateTeleportation(player);
-		} else if (src === dest) {
-			this.turn++;
-			this.showState(this.turn);
-			return;
-		} else if (GAME_MAP.isAdjacentByRoad(src, dest)) {
-			DISPLAY.animatePlayerMovement(player, [src, dest], TransportMode.ROAD);
+		// Animate movement depending on what transport mode the player
+		// used.  If  the player could have travelled by either road or
+		// rail, they are shown travelling by road.
+		if (GAME_MAP.isAdjacentByRoad(src, dest)) {
+			locations = [src, dest];
+			transport = TransportMode.ROAD;
 		} else if (GAME_MAP.isAdjacentByBoat(src, dest)) {
-			DISPLAY.animatePlayerMovement(player, [src, dest], TransportMode.BOAT);
+			locations = [src, dest];
+			transport = TransportMode.BOAT;
 		} else {
-			DISPLAY.animatePlayerMovement(player, GAME_MAP.getRailPath(src, dest),
-			                              TransportMode.RAIL);
+			locations = GAME_MAP.getRailPath(src, dest);
+			transport = TransportMode.RAIL;
 		}
 
 		this.turn++;
-		setTimeout(() => this.showState(this.turn), 900);
+		DISPLAY.animatePlayerMovement(player, locations, transport,
+			                          callback);
 	}
 }

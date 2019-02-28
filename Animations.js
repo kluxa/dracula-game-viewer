@@ -11,13 +11,16 @@ class MoveAnimation {
 	 *                          the  entity,  given  a progression value
 	 *                          between 0 and 1.
 	 * @param {number} duration - The total duration of the animation in
-	 *                            seconds.
+	 *                            seconds. (This does not work.)
+	 * @param {function} callback - A  function  to  be  called when the
+	 *                              animation is complete.
 	 */
-	constructor(entity, fn, duration) {
+	constructor(entity, fn, duration, callback) {
 		this.entity = entity;
 		this.progress = 0;
 		this.fn = fn;
 		this.duration = duration;
+		this.callback = callback;
 
 		if (entity.setPosition === undefined) {
 			console.warn("MoveAnimation: Entity does not have a " +
@@ -33,8 +36,10 @@ class MoveAnimation {
 			this.progress += 1.0 / (60 * this.duration);
 			if (this.progress >= 1.0) {
 				this.progress = 1.0;
+				this.callback();
+			} else {
+				this.entity.setPosition(this.fn(this.progress));
 			}
-			this.entity.setPosition(this.fn(this.progress));
 		}
 	}
 
@@ -60,13 +65,16 @@ class SizeAnimation {
 	 *                        entity given a progression value between 0
 	 *                        and 1.
 	 * @param {number} duration - The total duration of the animation in
-	 *                            seconds.
+	 *                            seconds. (This does not work.)
+	 * @param {function} callback - A  function  to  be  called when the
+	 *                              animation is complete.
 	 */
-	constructor(entity, fn, duration) {
+	constructor(entity, fn, duration, callback) {
 		this.entity = entity;
 		this.progress = 0;
 		this.fn = fn;
 		this.duration = duration;
+		this.callback = callback;
 
 		if (entity.setSize === undefined) {
 			console.warn("SizeAnimation: Entity does not have a " +
@@ -83,8 +91,10 @@ class SizeAnimation {
 			this.progress += 1.0 / (60 * this.duration);
 			if (this.progress >= 1.0) {
 				this.progress = 1.0;
+				this.callback();
+			} else {
+				this.entity.setSize(this.fn(this.progress));
 			}
-			this.entity.setSize(this.fn(this.progress));
 		}
 	}
 

@@ -49,12 +49,14 @@ class GraphicalDisplay {
 	 * @param {number} playerId - A player ID.
 	 * @param {number[]} locationIds - An array of location IDs.
 	 * @param {number} type - The transport mode.
+	 * @param {Function} callback - A  function  to  be  called when the
+	 *                              animation is complete.
 	 */
-	animatePlayerMovement(playerId, locationIds, type) {
+	animatePlayerMovement(playerId, locationIds, type, callback) {
 		const animation = new MoveAnimation(
 			this.players[playerId],
 			this.map.getAnimationFunction(locationIds, type),
-			0.5
+			0.5, callback
 		);
 		this.animations.push(animation);
 	}
@@ -63,24 +65,38 @@ class GraphicalDisplay {
 	 * Specifies an animation of a player teleporting to Castle Dracula.
 	 * (The player will always be Dracula.)
 	 * @param {number} playerId - A player ID.
+	 * @param {Function} callback - A  function  to  be  called when the
+	 *                              animation is complete.
 	 */
-	animateTeleportation(playerId) {
+	animateTeleportation(playerId, callback) {
 		const animation = new SizeAnimation(
 			this.players[playerId],
 			t => 1 - t,
-			0.5
+			0.5, callback
 		);
 		this.animations.push(animation);
 	}
 
 	////////////////////////////////////////////////////////////////////
-	// Updating State                                                 //
+	// Showing State                                                  //
 
 	/**
 	 * Resets certain attributes of the players (currently, just size).
 	 */
 	resetPlayers() {
 		this.players.forEach(x => x.reset());
+	}
+
+	/**
+	 * Updates  the graphical display to show state information from the
+	 * given game state.
+	 * @param {GameState} state - A game state.
+	 */
+	updateState(state) {
+		this.updateGameScore(state.getScore());
+		this.updatePlayerHealths(state.getHealths());
+		this.updatePlayerLocations(state.getLocations());
+		this.updateDracTrail(state.getDracTrailLocations());
 	}
 
 	/**
